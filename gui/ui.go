@@ -101,6 +101,17 @@ func (u *gtkUI) mainWindow() {
 	})
 	u.window = win.(gtki.ApplicationWindow)
 	u.window.SetApplication(u.app)
+	u.window.SetName("MyWindow")
+
+	prov, _ := g.gtk.CssProviderNew()
+	//	styleContext, _ := u.window.GetStyleContext()
+	//	styleContext.AddProvider(ds.provider, 9999)
+
+	css := "#MyWindow {background-color: #F00;}"
+	prov.LoadFromData(css)
+	screen, err := g.gdk.ScreenGetDefault()
+	g.gtk.AddProviderForScreen(screen, prov, uint(gtki.STYLE_PROVIDER_PRIORITY_APPLICATION))
+
 	u.window.ShowAll()
 }
 
