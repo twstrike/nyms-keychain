@@ -1,0 +1,30 @@
+<interface>
+  <object class="GtkAssistant" id="generateAssistant">
+    <signal name="cancel" handler="on_cancel_window_signal" swapped="no"/>
+    <property name="border_width">12</property>
+    <child>
+      <object class="GtkLabel" id="label1">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">Introduction page</property>
+      </object>
+      <packing>
+        <property name="page_type">intro</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkLabel" id="label2">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">Content page</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkLabel" id="label3">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">Confirmation page</property>
+      </object>
+      <packing>
+        <property name="page_type">confirm</property>
+      </packing>
+    </child>
+  </object>
+</interface>

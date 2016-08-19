@@ -96,8 +96,11 @@ func (u *gtkUI) mainWindow() {
 	if err != nil {
 		panic(err)
 	}
+	// builder.ConnectSignals(map[string]interface{}{
+	// 	"on_generate_key_dialog_signal": u.generateDialog,
+	// })
 	builder.ConnectSignals(map[string]interface{}{
-		"on_generate_key_dialog_signal": u.generateDialog,
+		"on_generate_key_dialog_signal": u.generateAssistantDialog,
 	})
 	u.window = win.(gtki.ApplicationWindow)
 	u.window.SetApplication(u.app)
@@ -107,7 +110,7 @@ func (u *gtkUI) mainWindow() {
 	//	styleContext, _ := u.window.GetStyleContext()
 	//	styleContext.AddProvider(ds.provider, 9999)
 
-	css := "#MyWindow {background-color: #F00;}"
+	css := "#MyWindow {background-color: #FFF;}"
 	prov.LoadFromData(css)
 	screen, err := g.gdk.ScreenGetDefault()
 	g.gtk.AddProviderForScreen(screen, prov, uint(gtki.STYLE_PROVIDER_PRIORITY_APPLICATION))
@@ -140,6 +143,21 @@ func (u *gtkUI) generateDialog() {
 	})
 	generateDialog.SetTransientFor(u.window)
 	generateDialog.Run()
+}
+
+func (u *gtkUI) generateAssistantDialog() {
+	builder := newBuilder("GenerateKeysAssistant")
+	obj, err := builder.GetObject("generateAssistant")
+	if err != nil {
+		panic(err)
+	}
+
+	generateAssistant := obj.(gtki.Assistant)
+	builder.ConnectSignals(map[string]interface{}{
+		"on_cancel_window_signal": func() { generateAssistant.Destroy() },
+	})
+	generateAssistant.SetTransientFor(u.window)
+	generateAssistant.ShowAll()
 }
 
 func generateNewKey(realName, email string) {
