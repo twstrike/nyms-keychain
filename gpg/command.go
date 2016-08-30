@@ -13,7 +13,11 @@ var dispatcher *commandDispatcher
 func init() {
 	dispatcher = &commandDispatcher{
 		commands: []command{
-			exclusiveCommands(&listPublicKeys{}, &listSecretKeys{}),
+			exclusiveCommands(
+				&listPublicKeys{},
+				&listSecretKeys{},
+				&importKeys{},
+			),
 		},
 	}
 }
