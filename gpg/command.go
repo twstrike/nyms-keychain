@@ -17,6 +17,7 @@ func init() {
 				&listPublicKeys{},
 				&listSecretKeys{},
 				&importKeys{},
+				&exportPublicKeys{},
 			),
 		},
 	}
