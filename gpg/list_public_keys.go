@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
-	"log"
 	"net/rpc"
 	"os"
 
@@ -23,15 +22,19 @@ func (cmd *listPublicKeys) addFlags() {
 	flag.BoolVar(&cmd.active, "list-public-keys", false, "list keys")
 }
 
-func (cmd *listPublicKeys) run(c *rpc.Client) {
+func (cmd *listPublicKeys) canRun() bool {
+	return cmd.active
+}
+
+func (cmd *listPublicKeys) run(c *rpc.Client) error {
 	if !cmd.active {
-		return
+		return nil
 	}
 
 	var pubKeyRing types.GetKeyRingResult
 	err := c.Call("Protocol.GetPublicKeyRing", types.VoidArg{}, &pubKeyRing)
 	if err != nil {
-		log.Fatal("GetPublicKeyRing error:", err)
+		return err
 	}
 
 	for _, k := range pubKeyRing.Keys {
@@ -47,4 +50,5 @@ func (cmd *listPublicKeys) run(c *rpc.Client) {
 		publicKeyringFormat(os.Stdout, entities)
 	}
 
+	return nil
 }
