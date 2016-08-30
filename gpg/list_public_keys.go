@@ -1,10 +1,14 @@
 package main
 
 import (
+	"bytes"
 	"flag"
+	"fmt"
 	"log"
 	"net/rpc"
 	"os"
+
+	"golang.org/x/crypto/openpgp"
 
 	"github.com/twstrike/nyms-agent/protocol/types"
 )
@@ -30,5 +34,17 @@ func (cmd *listPublicKeys) run(c *rpc.Client) {
 		log.Fatal("GetPublicKeyRing error:", err)
 	}
 
-	publicKeyringFormat(os.Stdout, pubKeyRing.Keys)
+	for _, k := range pubKeyRing.Keys {
+		b := bytes.NewBufferString(k.KeyData)
+		entities, err := openpgp.ReadArmoredKeyRing(b)
+		if err != nil {
+			// Errors are like:
+			//gpg: conversion from `utf-8' to `US-ASCII' failed: Illegal byte sequence
+			fmt.Println("gpg:", err)
+			continue
+		}
+
+		publicKeyringFormat(os.Stdout, entities)
+	}
+
 }
